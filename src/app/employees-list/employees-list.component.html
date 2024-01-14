@@ -1,0 +1,40 @@
+<div class="container">
+    <h1>Lista de Empleados</h1>
+  
+    <!-- Filtro de búsqueda (puedes extenderlo según tus necesidades) -->
+    <input type="text" placeholder="Buscar por nombre, id o tipo de empleado">
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Edad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of employees">
+          <td>{{ employee.id }}</td>
+          <td>{{ employee.nombre }}</td>
+          <td>
+            <!-- Campo de entrada editable para la edad -->
+            <input [(ngModel)]="employee.newAge" placeholder="Nueva Edad" (keydown)="handleAgeInput($event)">
+          </td>
+          <td>
+            <!-- Botones para editar, cambiar estatus y eliminar -->
+            <button (click)="editEmployee(employee.id, employee.newAge)" [disabled]="employee.estatus">Editar</button>
+            <button (click)="changeStatus(employee.id)">Cambiar Estatus</button>
+            <button (click)="deleteEmployee(employee.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Paginación -->
+    <div>
+      <button [disabled]="currentPage === 0" (click)="onPageChange(currentPage)">Anterior</button>
+      <span>{{ currentPage + 1 }} de {{ totalPages }}</span>
+      <button [disabled]="currentPage === (totalElements / pageSize - 1)" (click)="onPageChange(currentPage + 2)">Siguiente</button>
+    </div>
+  </div>
