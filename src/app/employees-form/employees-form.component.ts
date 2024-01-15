@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {MatInputModule} from '@angular/material/input';
 @Component({
   selector: 'app-employees-form',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
-    MatInputModule
+    ReactiveFormsModule
   ],
   templateUrl: './employees-form.component.html',
   styleUrl: './employees-form.component.css'
@@ -17,7 +15,7 @@ import {MatInputModule} from '@angular/material/input';
 export class EmployeesFormComponent {
   employeeForm!: FormGroup;
 
-  // Agrega un arreglo de cargos (simulado)
+  //arreglo de cargos (simulado)
   cargos: string[] = ['Gerente', 'Coordinador', 'Subdirector'];
 
   constructor(private fb: FormBuilder) {}
@@ -41,7 +39,6 @@ export class EmployeesFormComponent {
 
   onSubmit() {
     if (this.employeeForm.valid) {
-      // Aquí puedes enviar los datos a un servicio o realizar otras acciones
       console.log('Empleado:', this.employeeForm.value);
       this.employeeForm.reset();
     } else {
@@ -49,6 +46,7 @@ export class EmployeesFormComponent {
       this.marcarCamposComoTocados(this.employeeForm);
     }
   }
+
   calcularEdad() {
     const fechaNacimiento = this.employeeForm?.get('fechaNacimiento')?.value;
     if (fechaNacimiento) {
@@ -64,7 +62,7 @@ export class EmployeesFormComponent {
     }
   }
 
-  // Marca todos los campos como tocados recursivamente
+
   marcarCamposComoTocados(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach((control) => {
       if (control instanceof FormGroup) {

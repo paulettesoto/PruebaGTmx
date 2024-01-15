@@ -1,40 +1,54 @@
-<div class="container">
+<div class="grid">
+  <div class="title">
     <h1>Lista de Empleados</h1>
+  </div>
+  <div class="content">
+    
   
-    <!-- Filtro de búsqueda (puedes extenderlo según tus necesidades) -->
-    <input type="text" placeholder="Buscar por nombre, id o tipo de empleado">
+    <div class="search">
+      <input type="text" placeholder="Buscar por nombre, id o tipo de empleado" [(ngModel)]="searchTerm">
+      <button class="filter" (click)="applyFilter()">Filtrar</button>
+      <button class="add-employee" (click)="openModal()">Añadir</button>
+    </div>
+    
   
-    <table class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Edad</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let employee of employees">
-          <td>{{ employee.id }}</td>
-          <td>{{ employee.nombre }}</td>
-          <td>
-            <!-- Campo de entrada editable para la edad -->
-            <input [(ngModel)]="employee.newAge" placeholder="Nueva Edad" (keydown)="handleAgeInput($event)">
-          </td>
-          <td>
+    <div class="table">
+      <div class="head id">ID</div>
+      <div class="head name">Nombre</div>
+      <div class="head position">Cargo</div>
+      <div class="head age">Edad</div>
+      <div class="head actions">Acciones</div>
+
+        <ng-container *ngFor="let employee of filteredEmployees">
+          <div class="fields id">{{ employee.id }}</div>
+          <div class="fields name">{{ employee.nombre }}</div>
+          <div class="fields position">{{ employee.cargo }}</div>
+          <div class="fields age">
+            <input [(ngModel)]="employee.newage" placeholder={{employee.edad}} (keydown)="handleAgeInput($event)" [disabled]="employee.estatus">
+          </div>
+          <div class="fields actions">
             <!-- Botones para editar, cambiar estatus y eliminar -->
-            <button (click)="editEmployee(employee.id, employee.newAge)" [disabled]="employee.estatus">Editar</button>
-            <button (click)="changeStatus(employee.id)">Cambiar Estatus</button>
-            <button (click)="deleteEmployee(employee.id)">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <img src="../../assets/editar.png" (click)="editEmployee(employee.id, employee.newage)" [class.disabled]="employee.estatus">
+            <img src="../../assets/basura.png" (click)="deleteEmployee(employee.id)">
+            <img [src]="employee.estatus ? '../../assets/activar.png' : '../../assets/desactivar.png'" (click)="changeStatus(employee.id)">
+          </div>
+        </ng-container>
+
+    </div>
+    
+  </div>
+   <!-- Paginación -->
+  <div class="pagination">
+    <img src="../../assets/flecha-pequena-izquierda.png" [class.disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)">
+    <span>{{ currentPage + 1 }} de {{ totalPages }}</span>
+    <img src="../../assets/flecha-pequena-derecha.png" [class.disabled]="currentPage === (totalPages - 1)" (click)="onPageChange(currentPage + 1)">
+  </div>
   
-    <!-- Paginación -->
-    <div>
-      <button [disabled]="currentPage === 0" (click)="onPageChange(currentPage)">Anterior</button>
-      <span>{{ currentPage + 1 }} de {{ totalPages }}</span>
-      <button [disabled]="currentPage === (totalElements / pageSize - 1)" (click)="onPageChange(currentPage + 2)">Siguiente</button>
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-container">
+      <img src="../../assets/rectangulo-xmark.png" class="close-button" (click)="closeModal()">
+      <app-employees-form (formClosed)="closeModal()"></app-employees-form>
     </div>
   </div>
+
+</div>

@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { EmployeesFormComponent } from '../employees-form/employees-form.component';
 
 @Component({
   selector: 'app-employees-list',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+     EmployeesFormComponent
   ],
   templateUrl: './employees-list.component.html',
   styleUrl: './employees-list.component.css'
@@ -20,8 +22,31 @@ export class EmployeesListComponent implements OnInit{
   totalPages = 0;
   filteredEmployees: any[] = [];
   searchTerm: string = '';
+  catalogoCargos: any[] = [
+    {
+      "id": 1,
+      "descripcion": "Gerente"
+    },
+    {
+      "id": 2,
+      "descripcion": "Coordinador"
+    },
+    {
+      "id": 3,
+      "descripcion": "Subdirector"
+    }
+  ];
 
   constructor() {}
+  showModal: boolean = false;
+
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
 
   ngOnInit(): void {
     this.fetchEmployees();
@@ -38,7 +63,15 @@ export class EmployeesListComponent implements OnInit{
               "edad": 32,
               "estatus": true,
               "idCargo": 1
-          }
+          },
+          {
+            "id": 2,
+            "nombre": "Marco Mendoza Lopez",
+            "fechaNacimiento": 1653026400000,
+            "edad": 32,
+            "estatus": false,
+            "idCargo": 2
+        }
       ],
       "pageable": {
           "sort": {
@@ -66,25 +99,45 @@ export class EmployeesListComponent implements OnInit{
       "first": true,
       "empty": false
   };
-    this.employees = exampleResponse.content;
     this.pageSize = exampleResponse.pageable.pageSize; 
     this.employees = exampleResponse.content;
     this.totalElements = exampleResponse.totalElements;
     this.totalPages = exampleResponse.totalPages;
+    this.employees = exampleResponse.content.map((employee: any) => {
+      return {
+        ...employee,
+        cargo: this.getCargoDescripcion(employee.idCargo)
+      };
+    });
 
     this.filteredEmployees = [...this.employees];
   }
 
   onPageChange(newPage: number) {
-    this.currentPage = newPage - 1; // Paginación basada en cero
-    this.fetchEmployees();
+    const totalPages = this.totalPages; 
+  
+    if (newPage >= 0 && newPage < totalPages) {
+      this.currentPage = newPage;
+      this.fetchEmployees(); 
+    }
+  }
+  getCargoDescripcion(idCargo: number): string {
+    const cargo = this.catalogoCargos.find(c => c.id === idCargo);
+    return cargo ? cargo.descripcion : '';
   }
 
   applyFilter() {
-    // Filtra los empleados basados en el término de búsqueda
-    this.filteredEmployees = this.employees.filter(employee =>
-      employee.nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    if (!this.searchTerm) {
+      // Si no hay término de búsqueda, mostrar todos los empleados
+      this.filteredEmployees = [...this.employees];
+    } else {
+      // Filtra los empleados basados en el término de búsqueda
+      this.filteredEmployees = this.employees.filter(employee =>
+        (employee.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        employee.id.toString().includes(this.searchTerm) ||
+        this.catalogoCargos.some(cargo => cargo.descripcion.toLowerCase().includes(this.searchTerm.toLowerCase()) && cargo.id === employee.idCargo))
+      );
+    }
   }
 
     handleAgeInput(event: KeyboardEvent) {
@@ -97,17 +150,14 @@ export class EmployeesListComponent implements OnInit{
     }
   }
   editEmployee(employeeId: number, newAge: number) {
-    // Implementa la lógica para editar la información del empleado
     console.log('Editar empleado', employeeId, newAge);
   }
 
   changeStatus(employeeId: number) {
-    // Implementa la lógica para cambiar el estatus del empleado
     console.log('Cambiar estatus', employeeId);
   }
 
   deleteEmployee(employeeId: number) {
-    // Implementa la lógica para eliminar al empleado
     console.log('Eliminar empleado', employeeId);
   }
 

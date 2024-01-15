@@ -1,58 +1,47 @@
 <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-    <div>
-        <matInput>
+    <div class="name">
             <label for="nombreCompleto">Nombre Completo:</label>
             <input type="text" id="nombreCompleto" formControlName="nombreCompleto" />
-            <div *ngIf="employeeForm.get('nombreCompleto')?.hasError('required') && employeeForm.get('nombreCompleto')?.touched">
+            <div class="error" *ngIf="employeeForm.get('nombreCompleto')?.hasError('required') && employeeForm.get('nombreCompleto')?.touched">
                 ¡El nombre completo es obligatorio!
             </div>
-        </matInput>
         
     </div>
 
-    <div>
-        <matInput>
+    <div class="date">
             <label for="fechaNacimiento">Fecha de Nacimiento:</label>
             <input type="date" id="fechaNacimiento" formControlName="fechaNacimiento" />
-            <div *ngIf="employeeForm.get('fechaNacimiento')?.hasError('required') && employeeForm.get('fechaNacimiento')?.touched">
+            <div class="error" *ngIf="employeeForm.get('fechaNacimiento')?.hasError('required') && employeeForm.get('fechaNacimiento')?.touched">
                 ¡La fecha de nacimiento es obligatoria!
-            </div>
-        </matInput>
-        
+            </div>      
     </div>
 
-    <div>
-       <matInput>
+    <div class="age">
             <label for="edad">Edad:</label>
             <input type="number" id="edad" formControlName="edad" [disabled]="true" />
-        </matInput>
     </div>
 
-    <div>
-        <matInput>
+    <div class="position">
             <label for="cargo">Cargo:</label>
             <select id="cargo" formControlName="cargo">
                 <option value="" disabled [selected]="true">Seleccione un cargo</option>
                 <option *ngFor="let cargo of cargos" [value]="cargo">{{ cargo }}</option>
             </select>
-            <div *ngIf="employeeForm.get('cargo')?.hasError('required') && employeeForm.get('cargo')?.touched">
+            <div class="error" *ngIf="employeeForm.get('cargo')?.hasError('required') && employeeForm.get('cargo')?.touched">
                 ¡El cargo es obligatorio!
             </div>
-        </matInput>
     </div>
 
-    <div>
-        <matInput>
+    <div class="status">
             <label for="estatus">Estatus:</label>
             <select id="estatus" formControlName="estatus">
                 <option value="Activo">Activo</option>
                 <option value="Inactivo">Inactivo</option>
             </select>
-            <div *ngIf="employeeForm.get('estatus')?.hasError('required') && employeeForm.get('estatus')?.touched">
+            <div class="error" *ngIf="employeeForm.get('estatus')?.hasError('required') && employeeForm.get('estatus')?.touched">
                 ¡El estatus es obligatorio!
             </div>
-        </matInput>
     </div>
 
-    <button type="submit" [disabled]="!employeeForm.valid">Registrar</button>
+    <button class="register" type="submit">Registrar</button>
 </form>

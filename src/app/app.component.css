@@ -1,0 +1,21 @@
+.grid{
+    width: 100%;
+    display: grid;
+    grid-template-rows: .5fr 4fr .8fr;
+    min-height: 100vh;
+}
+.header{
+    grid-row: 1 / 2;
+    width: 100%;
+    background-color: #F6F6F6;
+}
+.content{
+    width: 100%;
+    grid-row: 2 / 3;
+    overflow: auto;
+}
+.footer{
+    grid-row: 3 / 4;
+    width: 100%;
+    background-color: #161D6F;
+}
