@@ -141,14 +141,17 @@ export class EmployeesListComponent implements OnInit{
   }
 
     handleAgeInput(event: KeyboardEvent) {
-     // Permitir teclas de control, números y teclas de flecha
-    const isNumberKey = !isNaN(Number(event.key));
-
-    // Si no es una tecla permitida, prevenir la acción del evento
-    if (!(isNumberKey )) {
-      event.preventDefault();
+      // Permitir teclas de control, números, teclas de flecha y teclas de retroceso y eliminar
+      const isAllowedKey =
+        !isNaN(Number(event.key)) ||
+        ['ArrowLeft', 'ArrowRight', 'Backspace', 'Delete'].includes(event.key);
+    
+      // Si no es una tecla permitida, prevenir la acción del evento
+      if (!isAllowedKey) {
+        event.preventDefault();
+      }
     }
-  }
+
   editEmployee(employeeId: number, newAge: number) {
     console.log('Editar empleado', employeeId, newAge);
   }
